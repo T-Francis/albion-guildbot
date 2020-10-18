@@ -15,7 +15,7 @@ function baseRequest(baseUrl: string, path: string, queries?: { [key: string]: a
   const qs = queries
     ? '?' + Object.entries(queries).map((query: string[]) => query.join('=')).join('&')
     : '';
-  const url = `${baseUrl}${path}?${qs}`;
+  const url = `${baseUrl}${path}${qs}`;
 
   return new Promise((resolve, reject) => {
     request(url, (error, response, body) => {

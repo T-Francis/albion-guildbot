@@ -4,7 +4,7 @@ import IBattleData from './Battle/IBattleData';
 
 // TODO: Both should be config options later?
 const API_URL = process.env.ALBION_API_BASE || 'https://gameinfo.albiononline.com/api/gameinfo';
-const LIVE_URL = 'http://live.albiononline.com';
+const LIVE_URL = 'http://serverstatus.albiononline.com/';
 
 /**
  * Request a resource from the Albion Online API.
@@ -98,5 +98,5 @@ export function getEvents(options: IRequestOptions): Promise<any[]> {
  * Get Albion Online status information
  */
 export function serverStatusRequest(): Promise<any> {
-  return baseRequest(LIVE_URL, '/status.txt');
+  return baseRequest(LIVE_URL, '');
 }

@@ -16,10 +16,9 @@ function baseRequest(baseUrl: string, path: string, queries?: { [key: string]: a
     ? '?' + Object.entries(queries).map((query: string[]) => query.join('=')).join('&')
     : '';
   const url = `${baseUrl}${path}${qs}`;
-
   return new Promise((resolve, reject) => {
     request(url, (error, response, body) => {
-      if (error || (response && response.statusCode === 404)) {
+      if (error || (response && response.statusCode === 404 )) {
         reject(error || response);
         return;
       }

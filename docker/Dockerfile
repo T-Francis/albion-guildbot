@@ -14,7 +14,10 @@ RUN chmod -R g+w /app \
     && chown -R $USERNAME:$USERNAME /usr/local/bin/
 
 # starter script
-COPY start-container /usr/local/bin/start-container
+COPY app/ /app
+
+# starter script
+COPY docker/start-container /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/*
 
 CMD ["start-container"]

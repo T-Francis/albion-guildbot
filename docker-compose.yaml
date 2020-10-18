@@ -1,8 +1,7 @@
 version: "3"
 
 services:
-
-  # nuxt.template
+  #
   albion.guildbot:
     container_name: albion.guildbot
     image: aliart/albion.guildbot

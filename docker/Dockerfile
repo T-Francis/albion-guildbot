@@ -1,23 +1,25 @@
 FROM node:13.2.0
 
-# create an app user
-ARG USERNAME
-ARG DOCKER_UID
-ARG DOCKER_GID
-RUN groupadd -g $DOCKER_GID $USERNAME
-RUN useradd -m -u $DOCKER_UID -g $DOCKER_GID -s /bin/bash $USERNAME
+# supervisor
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    supervisor \
+    && rm /bin/sh && ln -s /bin/bash /bin/sh \
+    && rm -r /var/lib/apt/lists/*
+
+# supervisord conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# pm2 
+RUN npm install -g pm2 && apt-get clean
 
 WORKDIR /app
 
-RUN chown -R $DOCKER_UID:$DOCKER_UID /app
-RUN chmod -R g+w /app \
-    && chown -R $USERNAME:$USERNAME /usr/local/bin/
+RUN chown -R node:node /app
 
-# starter script
+USER node
+
 COPY app/ /app
 
-# starter script
-COPY docker/start-container /usr/local/bin/start-container
-RUN chmod +x /usr/local/bin/*
+RUN npm install
 
-CMD ["start-container"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

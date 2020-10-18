@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:13.2.0
 
 # create an app user
 ARG USERNAME
@@ -15,7 +15,7 @@ RUN chmod -R g+w /app \
 
 # sudo power (without password) <- DEVELOPMENT AND PLAYGROUND ONLY
 RUN usermod -a -G sudo $USERNAME && \
-    echo '$USERNAME ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # starter script
 COPY start-container /usr/local/bin/start-container

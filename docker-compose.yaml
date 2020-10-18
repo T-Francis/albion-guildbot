@@ -4,7 +4,7 @@ services:
   #
   albion.guildbot:
     container_name: albion.guildbot
-    image: aliart/albion.guildbot
+    image: aliart/albion.guildbot:1.0
     build:
       context: ./docker
       dockerfile: Dockerfile

@@ -75,7 +75,7 @@ function checkBattles() {
 
         return relevantPlayerCount >= config.battle.minRelevantPlayers;
       }).forEach(battle => sendBattleReport(battle));
-  });
+  }).catch(error=>logger.error(error.message));
 }
 
 function sendBattleReport(battle, channelId) {
@@ -145,7 +145,7 @@ function sendBattleReport(battle, channelId) {
   bot.channels.get(channelId || config.discord.feedChannelId).send({ embed }).then(() => {
     logger.info(`Successfully posted log of battle between ${title}.`);
   }).catch(err => {
-    logger.error(err);
+    logger.error(err.message);
   });
 }
 
@@ -182,9 +182,9 @@ function sendKillReport(event, channelId) {
 
     const files = [{ name: 'kill.png', attachment: imgBuffer }];
     return bot.channels.get((channelId || config.discord.killChannelId)).send({ embed, files });
-  }).then(() => {
+  }).catch(error=>logger.error(error.message)).then(() => {
     logger.info(`Successfully posted log of ${createDisplayName(event.Killer)} killing ${createDisplayName(event.Victim)}.`);
-  });
+  }).catch(error=>logger.error(error.message));
 }
 
 function checkKillboard() {
@@ -208,7 +208,7 @@ function checkKillboard() {
       });
 
     db.set('recents.eventId', lastEventId).write();
-  });
+  }).catch(error=>logger.error(error.message));
 }
 
 function createGuildTag(player) {
@@ -259,7 +259,7 @@ function checkServerStatus(channelId) {
       db.set('recents.albionStatus', currentAlbionStatus.status).write();
       db.set('recents.albionStatusMsg', currentAlbionStatus.message).write();
     }
-  });
+  }).catch(error=>logger.error(error.message));
 }
 
 bot.on('message', msg => {
@@ -270,7 +270,7 @@ bot.on('message', msg => {
   if (matches && matches.length) {
     Albion.getEvent(matches[1]).then(event => {
       sendKillReport(event, channelID);
-    });
+    }).catch(error=>logger.error(error.message));
     return;
   }
 
@@ -278,7 +278,7 @@ bot.on('message', msg => {
   if (matches && matches.length) {
     Albion.getBattle(matches[1]).then(battle => {
       sendBattleReport(new Battle(battle), channelID);
-    });
+    }).catch(error=>logger.error(error.message));
     return;
   }
 
@@ -307,12 +307,12 @@ bot.on('message', msg => {
     case 'showBattle':
       Albion.getBattle(id).then(battle => {
         sendBattleReport(new Battle(battle), channelID);
-      });
+      }).catch(error=>logger.error(error.message));
       break;
     case 'showKill':
       Albion.getEvent(id).then(event => {
         sendKillReport(event, channelID);
-      });
+      }).catch(error=>logger.error(error.message));
       break;
   }
 });

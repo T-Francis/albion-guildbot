@@ -6,6 +6,14 @@ import IBattleData from './Battle/IBattleData';
 const API_URL = process.env.ALBION_API_BASE || 'https://gameinfo.albiononline.com/api/gameinfo';
 const LIVE_URL = 'http://serverstatus.albiononline.com/';
 
+function isBadStatus(statusCode : any){
+  return ( 
+    statusCode === 404 
+    || statusCode === 502  
+    || statusCode === 504 
+  ) ? true : false ; 
+}
+
 /**
  * Request a resource from the Albion Online API.
  * @param path - The resource path of the URL.
@@ -18,8 +26,9 @@ function baseRequest(baseUrl: string, path: string, queries?: { [key: string]: a
   const url = `${baseUrl}${path}${qs}`;
   return new Promise((resolve, reject) => {
     request(url, (error, response, body) => {
-      if (error || (response && response.statusCode === 404 )) {
-        reject(error || response);
+      const badStatusCode =  isBadStatus(response.statusCode);
+      if (error || badStatusCode) {
+        badStatusCode ? reject(new Error(`ALBION_API_ERROR: ${url} returned a ${response.statusCode} status`)) : reject(error);
         return;
       }
       try {

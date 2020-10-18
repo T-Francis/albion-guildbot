@@ -13,10 +13,6 @@ RUN chown -R $DOCKER_UID:$DOCKER_UID /app
 RUN chmod -R g+w /app \
     && chown -R $USERNAME:$USERNAME /usr/local/bin/
 
-# sudo power (without password) <- DEVELOPMENT AND PLAYGROUND ONLY
-RUN usermod -a -G sudo $USERNAME && \
-    echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
 # starter script
 COPY start-container /usr/local/bin/start-container
 RUN chmod +x /usr/local/bin/*

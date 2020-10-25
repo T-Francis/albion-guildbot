@@ -17,13 +17,6 @@ const adapter = new FileSync('.db.json');
 const db = low(adapter);
 db.defaults({ recents: { battleId: 0, eventId: 0 } }).write();
 
-// Heroku will crash if we're not listenining on env.PORT.
-if (process.env.HEROKU) {
-  const Express = require('express');
-  const app = new Express();
-  app.listen(process.env.PORT || 1337);
-}
-
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, { colorize: true });
@@ -53,6 +46,13 @@ bot.on('ready', () => {
 
   setInterval(checkBattles, 60000);
   setInterval(checkKillboard, 30000);
+  // healthcheck, also Heroku will crash if we're not listenining on env.PORT.
+  const Express = require('express');
+  const app = new Express();
+  app.get('/connected', function(req, res) {
+    res.send('bot ready');
+  });
+  app.listen(1337);
 });
 
 function checkBattles() {

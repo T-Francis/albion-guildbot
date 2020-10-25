@@ -230,7 +230,7 @@ function sendServerStatus(channelId, isCmd) {
     description: isCmd
       ? `Current server status is **${lastAlbionStatus}**`
       : `Server status just changed to **${lastAlbionStatus}**`,
-    color: lastAlbionStatus === 'offline' ? 0xff2600 : 0x00f900,
+    color: (lastAlbionStatus === 'offline' || lastAlbionStatus == 500 ) ? 0xff2600 : 0x00f900,
     fields: [{
       name: 'Message',
       value: lastAlbionStatusMsg,
